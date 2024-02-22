@@ -3,6 +3,7 @@ import styles from './page.module.css';
 import { useState } from 'react';
 import Canvas from './canvas';
 import { direction, charge } from './helper';
+import get_missing_vector from './calculations';
 
 type directionOrNull = direction | null;
 type chargeOrNull = charge | null;
@@ -135,7 +136,18 @@ export default function App() {
   const [force, setForce] = useState<directionOrNull>(null);
   const [charge, setCharge] = useState<chargeOrNull>(null);
 
+  function calculate_missing_vector() {
+    const missing_vector = get_missing_vector(field, current, force, charge);
 
+    switch (missing_vector[0]) {
+      case "none":
+        return;
+      case "force":
+        setForce(missing_vector[1]);
+      
+
+    }
+  }
   return (
     <main className={styles.main}>
       <Header />

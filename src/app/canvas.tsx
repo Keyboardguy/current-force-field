@@ -155,17 +155,125 @@ function draw_diagram(canvas:HTMLCanvasElement, field: directionOrNull, current:
     return;
   }
 
-  function draw_current() {
+	function fill_equilateral_triangle(x_center: number, y_center: number, r: number, rotation=0) {
+		// https://stackoverflow.com/questions/8935930/create-equilateral-triangle-in-the-middle-of-canvas
+		// draws an equilateral triangle enscribed in circle x,y with radius r and a rotation of rotation degrees.
+		rotation = rotation * (Math.PI / 180) - Math.PI / 2;
+		let x = r*Math.cos(rotation) + x_center;
+		let y = r*Math.sin(rotation) + y_center;
+		ctx.beginPath();
+		ctx.moveTo(x, y);
+		const point_angle_diff = (2/3) * Math.PI;
+		const limit = 2 * Math.PI + rotation;
+		// pen is already at the first point, so go to the next point immediately.
+		for (let angle = rotation + point_angle_diff; angle < limit; angle += point_angle_diff) {
+			x = r*Math.cos(angle) + x_center;
+			y = r*Math.sin(angle) + y_center;
+			ctx.lineTo(x, y);
+		}
+		ctx.closePath();
+		ctx.fill();
+	}
 
+  function draw_thick_arrow(x:number, y:number) {
+    // x and y is the position of the middle of the tail of the arrow.
+    const tail_length = 100;
+    const tail_thickness = 10;
+
+    ctx.fillRect(x - tail_thickness / 2, y, tail_thickness, tail_length);
+    fill_equilateral_triangle(x, y + tail_length + tail_thickness / 2, tail_thickness, 180);
+  }
+
+  function draw_particle_arrow(variable: directionOrNull, variable_name: "Current" | "Force") {
+    if (!variable) {
+      return;
+    }
+
+    if (variable === "in the page" || variable === "out the page") {
+      ctx.save();
+      ctx.font = "30px helvetica"
+      ctx.textBaseline = "top";
+      ctx.textAlign = "start";
+      // there will never be more than one variable in or out. so its fine just to hard code [5, 5] for the pos.
+      const text = ctx.measureText(`${variable_name}: ${variable}`);
+      //ctx.fillRect()
+
+      ctx.fillText(`${variable_name}: ${variable}`, 5, 5);
+      ctx.restore();
+      return;
+    } 
+
+    ctx.save();
+    let amount_to_rotate = 0;
+    switch (variable) {
+      case "right":
+        amount_to_rotate = 90;
+        break;
+      case "down":
+        amount_to_rotate = 180;
+        break; 
+      case "left":
+        amount_to_rotate = 270;
+        break; 
+    }
+
+    ctx.translate(...centre);
+    ctx.rotate(deg_to_rad(amount_to_rotate));
+    ctx.translate(-centre[0], -centre[1]);
+    draw_thick_arrow(...centre);
+    ctx.restore();
+  }
+
+  function draw_current() {
+    ctx.save();
+    ctx.fillStyle = "red";
+    draw_particle_arrow(current, "Current");
+    ctx.restore();
   }
 
   function draw_force() {
-
+    ctx.save();
+    ctx.fillStyle = "green";
+    draw_particle_arrow(force, "Force");
+    ctx.restore();
   }
 
   function draw_particle() {
-    function draw_charge
-    function draw_particle
+    function draw_charge() {
+      // i cannot use fillText, because its not centered even with textBaseline and textAlign.
+      function draw_middle_minus() {
+        ctx.fillRect(centre[0] - 10, centre[1] - 2, 20, 4);
+      }
+      ctx.save();
+      ctx.fillStyle = "black";
+      switch (charge) {
+        case "negative":
+          draw_middle_minus();
+          break;
+        case "positive":
+          draw_middle_minus();
+          ctx.translate(...centre);
+          ctx.rotate(deg_to_rad(90));
+          ctx.translate(-centre[0], -centre[1]);
+          draw_middle_minus();
+          break;
+      }
+      ctx.restore();
+    }
+
+    function draw_shape() {
+      ctx.save();
+      ctx.fillStyle = "black";
+      draw_fill_circle(...centre, 30);
+      ctx.fillStyle = "grey";
+      draw_fill_circle(...centre, 25);
+      ctx.restore();
+    }
+
+    draw_current();
+    draw_force();
+    draw_shape();
+    draw_charge();
   }
 
   // ive asserted it's not null, but i still check for it. It's just to get rid of the errors above.
@@ -185,6 +293,7 @@ function draw_diagram(canvas:HTMLCanvasElement, field: directionOrNull, current:
 	ctx.fillStyle = "#000000";
 
   draw_field();
+  draw_particle();
 }
 
 export default function Canvas({
