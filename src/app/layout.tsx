@@ -1,7 +1,6 @@
 import type { Metadata } from 'next'
 import './globals.css'
 
-
 export const metadata: Metadata = {
   title: 'Force, Current, Field',
   description: 'Becase Im really bad at these questions',

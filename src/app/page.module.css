@@ -6,3 +6,32 @@
 .canvas {
   border: 1px solid black;
 }
+
+.valueSelect label { 
+  padding-right: 0.2em;
+}
+
+.valueSelect select { 
+  min-width: 120px;
+}
+
+.bigButton {
+  border: 1px solid black;
+  padding: 0.5em 1em;
+}
+
+.twoBoxSplit {
+  display: flex;
+  justify-content: space-around;
+  padding: 1em;
+}
+
+.twoBoxSplit > div:nth-child(1) {
+  padding: 1em;
+  margin: 0.5em;
+}
+
+.twoBoxSplit > div:nth-child(2) {
+  padding: 1em;
+  margin: 0.5em;
+}

@@ -86,7 +86,7 @@ function generic_find_missing_direction(a: direction, b: direction, charge: char
 }
 
 function get_missing_vector(field: directionOrNull, current: directionOrNull,
-                            force: directionOrNull, charge: charge | null): ["charge*", charge] | ["field" | "current" | "force", direction] | ["none", null] {
+                            force: directionOrNull, charge: charge | null): ["charge", charge] | ["field" | "current" | "force", direction] | ["none", null] {
     if ([field, current, force, charge].filter(x => x === null).length !== 1) {
         return ["none", null];
     }  

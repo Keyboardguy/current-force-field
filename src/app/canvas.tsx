@@ -68,7 +68,9 @@ function draw_diagram(canvas:HTMLCanvasElement, field: directionOrNull, current:
       ctx.save();
       // these are just used to keep track of how much its been offset so far.
       // don't actully use them when translating, apart from the one there.
-      const initial_offset: [number, number] = [radius + 5, radius + 5];
+      // spacing and diameter
+      const initial_offset: [number, number] = [((canvas.width - radius) % spacing + radius) / 2,
+                                                ((canvas.height - radius) % spacing + radius) / 2];
 
       let total_x_offset = initial_offset[0];
       let total_y_offset = initial_offset[1];
@@ -96,10 +98,11 @@ function draw_diagram(canvas:HTMLCanvasElement, field: directionOrNull, current:
     function draw_arrows_vertically(offset: number, reverse:boolean) {
       ctx.save();
       const arrow_length = canvas.height - 2 * margin[1];
-      let total_x_offset = margin[0];
-      ctx.translate(...margin);
+      const initial_x_offset = ((canvas.width) % offset) / 2
+      let total_x_offset = initial_x_offset;
+      ctx.translate(...[initial_x_offset, margin[1]]);
 
-      while (total_x_offset < canvas.width - margin[0]) {
+      while (total_x_offset <= canvas.width - initial_x_offset) {
         if (reverse) {
           draw_arrow(0, arrow_length, 0, 0);
         } else {
@@ -113,10 +116,11 @@ function draw_diagram(canvas:HTMLCanvasElement, field: directionOrNull, current:
     function draw_arrows_horizontally(offset: number, reverse: boolean) {
       ctx.save();
       const arrow_length = canvas.width - 2 * margin[0]
-      let total_y_offset = margin[1];
-      ctx.translate(...margin);
+      const initial_y_offset = ((canvas.height) % offset) / 2
+      let total_y_offset = initial_y_offset;
+      ctx.translate(...[margin[0], initial_y_offset]);
     
-      while (total_y_offset < canvas.height - margin[1]) {
+      while (total_y_offset <= canvas.height - initial_y_offset) {
         if (reverse) {
           draw_arrow(arrow_length, 0, 0, 0);
         } else {
@@ -133,16 +137,16 @@ function draw_diagram(canvas:HTMLCanvasElement, field: directionOrNull, current:
     ctx.strokeStyle = "blue";
     switch (field) {
       case "left":
-        draw_arrows_horizontally(100, true);
+        draw_arrows_horizontally(87, true);
         break;
       case "right":
-        draw_arrows_horizontally(100, false);
+        draw_arrows_horizontally(87, false);
         break;
       case "up":
-        draw_arrows_vertically(100, true);
+        draw_arrows_vertically(95, true);
         break;
       case "down":
-        draw_arrows_vertically(100, false);
+        draw_arrows_vertically(95, false);
         break;
       case "in the page":
         draw_circles(100, 15, draw_circle_in_page);
@@ -180,8 +184,8 @@ function draw_diagram(canvas:HTMLCanvasElement, field: directionOrNull, current:
     const tail_length = 100;
     const tail_thickness = 10;
 
-    ctx.fillRect(x - tail_thickness / 2, y, tail_thickness, tail_length);
-    fill_equilateral_triangle(x, y + tail_length + tail_thickness / 2, tail_thickness, 180);
+    ctx.fillRect(x - tail_thickness / 2, y - tail_length, tail_thickness, tail_length);
+    fill_equilateral_triangle(x, y - tail_length - tail_thickness / 2, tail_thickness);
   }
 
   function draw_particle_arrow(variable: directionOrNull, variable_name: "Current" | "Force") {
