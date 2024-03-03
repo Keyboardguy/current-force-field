@@ -104,7 +104,7 @@ function Details({
 
 function CalculateButton({ calculateMissingVector }: { calculateMissingVector: () => void }) {
   return <button onClick={calculateMissingVector} className={styles.bigButton}>
-    Calcualte missing thing
+    Calculate missing thing
   </button>
 } 
 
