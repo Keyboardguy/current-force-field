@@ -54,12 +54,12 @@ function draw_diagram(canvas:HTMLCanvasElement, field: directionOrNull, current:
   function draw_field() {
     function draw_circle_in_page(x: number, y: number, radius: number) {
       draw_stroke_circle(x, y, radius);
-      draw_fill_circle(x, y, radius / 5);
+      draw_x(x, y, radius);
     }
 
     function draw_circle_out_page(x: number, y: number, radius: number) {
       draw_stroke_circle(x, y, radius);
-      draw_x(x, y, radius);
+      draw_fill_circle(x, y, radius / 5);
     }
 
     function draw_circles(spacing: number,
@@ -198,11 +198,15 @@ function draw_diagram(canvas:HTMLCanvasElement, field: directionOrNull, current:
       ctx.font = "30px helvetica"
       ctx.textBaseline = "top";
       ctx.textAlign = "start";
-      // there will never be more than one variable in or out. so its fine just to hard code [5, 5] for the pos.
-      const text = ctx.measureText(`${variable_name}: ${variable}`);
-      //ctx.fillRect()
+      // there will never be more than one variable in or out. so its fine just to hard code the offset for the pos.
+      const offset: [number, number] = [5,5];
+      const text_dimensions = ctx.measureText(`${variable_name}: ${variable}`);
+      ctx.save();
+      ctx.fillStyle = "white";
+      ctx.clearRect(0, 0, text_dimensions.width + offset[0] * 2, text_dimensions.actualBoundingBoxDescent + offset[1] + 2);
+      ctx.restore();
 
-      ctx.fillText(`${variable_name}: ${variable}`, 5, 5);
+      ctx.fillText(`${variable_name}: ${variable}`, ...offset);
       ctx.restore();
       return;
     } 
@@ -269,7 +273,13 @@ function draw_diagram(canvas:HTMLCanvasElement, field: directionOrNull, current:
       ctx.save();
       ctx.fillStyle = "black";
       draw_fill_circle(...centre, 30);
-      ctx.fillStyle = "grey";
+      if (charge === "positive") {
+        ctx.fillStyle = "red";
+      } else if (charge === "negative") {
+        ctx.fillStyle = "rgb(131,126,211)";
+      } else {
+        ctx.fillStyle = "grey";
+      }
       draw_fill_circle(...centre, 25);
       ctx.restore();
     }

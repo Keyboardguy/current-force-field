@@ -20,7 +20,7 @@ function createLinkedDirection(x:direction, y:direction): linkedDirection {
 }
 
 function Header() {
-  return <h1>PAIN</h1>
+  return <h1>Right hand rule calculator</h1>
 }
 
 function Details({
