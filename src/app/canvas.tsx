@@ -179,13 +179,28 @@ function draw_diagram(canvas:HTMLCanvasElement, field: directionOrNull, current:
 		ctx.fill();
 	}
 
-  function draw_thick_arrow(x:number, y:number) {
+  function draw_thick_arrow_with_text(x:number, y:number, symbol:"v" | "F", rotation: number) {
     // x and y is the position of the middle of the tail of the arrow.
     const tail_length = 100;
     const tail_thickness = 10;
-
+    
+    ctx.save();
     ctx.fillRect(x - tail_thickness / 2, y - tail_length, tail_thickness, tail_length);
     fill_equilateral_triangle(x, y - tail_length - tail_thickness / 2, tail_thickness);
+    ctx.textBaseline = "middle";
+    ctx.textAlign = "center";
+    ctx.font = "bold 25px Helvetica"
+    const text_dimensions = ctx.measureText(symbol);
+    if (rotation % 180 === 0) {
+      ctx.translate(x, y - tail_length - text_dimensions.actualBoundingBoxDescent * 3.5);
+      ctx.rotate(-deg_to_rad(rotation));
+      ctx.fillText(symbol, 0,0);
+    } else {
+      ctx.translate(x, y - tail_length - text_dimensions.width * 2);
+      ctx.rotate(-deg_to_rad(rotation));
+      ctx.fillText(symbol, 0,0);
+    }
+    ctx.restore();
   }
 
   function draw_particle_arrow(variable: directionOrNull, variable_name: "Current" | "Force") {
@@ -228,7 +243,7 @@ function draw_diagram(canvas:HTMLCanvasElement, field: directionOrNull, current:
     ctx.translate(...centre);
     ctx.rotate(deg_to_rad(amount_to_rotate));
     ctx.translate(-centre[0], -centre[1]);
-    draw_thick_arrow(...centre);
+    draw_thick_arrow_with_text(...centre, variable_name === "Current" ? "v" : "F", amount_to_rotate);
     ctx.restore();
   }
 
