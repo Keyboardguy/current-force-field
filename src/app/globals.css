@@ -1,6 +1,5 @@
 html {
   box-sizing: border-box;
-  font-size: 20px;
 }
 
 *, *:before, *:after {
@@ -14,11 +13,16 @@ body {
   font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
+label {
+  font-size: 1.1rem;
+}
 
+select {
+  font-size: 0.9rem;
+}
 
-a:link, a:visited {
-  color: #38488f;
-  text-decoration: none;
+button {
+  font-size: 0.9rem;
 }
 
 @media (max-width: 700px) {
