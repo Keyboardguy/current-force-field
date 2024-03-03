@@ -23,15 +23,23 @@
 .twoBoxSplit {
   display: flex;
   justify-content: space-around;
+  width: 600px;
+  margin: 5em auto;
   padding: 1em;
+  background-color: #fff;
+  border-radius: 1em;
 }
 
-.twoBoxSplit > div:nth-child(1) {
-  padding: 1em;
+.twoBoxSplit > div {
+  padding: 0.5em;
   margin: 0.5em;
 }
 
-.twoBoxSplit > div:nth-child(2) {
-  padding: 1em;
-  margin: 0.5em;
+@media (max-width: 700px) {
+  .twoBoxSplit, .twoBoxSplit div {
+    width: auto;
+    margin: 0 auto;
+    border-radius: 0;
+    padding: 1em;
+  }
 }
