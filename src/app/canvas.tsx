@@ -192,11 +192,11 @@ function draw_diagram(canvas:HTMLCanvasElement, field: directionOrNull, current:
     ctx.font = "bold 25px Helvetica"
     const text_dimensions = ctx.measureText(symbol);
     if (rotation % 180 === 0) {
-      ctx.translate(x, y - tail_length - text_dimensions.actualBoundingBoxDescent * 3.5);
+      ctx.translate(x, y - tail_length - tail_thickness * 1.5 - text_dimensions.actualBoundingBoxDescent - 5);
       ctx.rotate(-deg_to_rad(rotation));
       ctx.fillText(symbol, 0,0);
     } else {
-      ctx.translate(x, y - tail_length - text_dimensions.width * 2);
+      ctx.translate(x, y - tail_length - tail_thickness * 1.5 - text_dimensions.width / 2 - 5);
       ctx.rotate(-deg_to_rad(rotation));
       ctx.fillText(symbol, 0,0);
     }
